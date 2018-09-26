@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 class App extends Component {
   constructor () {
@@ -12,7 +10,7 @@ class App extends Component {
       people: []
     }
   }
-  
+
   componentDidUpdate (prevProps, prevState) {
     if (this.state.account !== false && prevState.account === false) {
       window.fetch('/api/people', { headers: this.state.auth })
@@ -49,15 +47,15 @@ class App extends Component {
       })
     }
   }
-  
+
   handleSignIn () {
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
-    
+
     this.setState({
       errors: []
     })
-    
+
     window.fetch('/api/auth/sign_in', {
       method: 'POST',
       headers: {
@@ -98,15 +96,15 @@ class App extends Component {
       console.log('err', err)
     })
   }
-  
+
   handleSignUp () {
     const email = document.getElementById('email').value
     const password = document.getElementById('password').value
-    
+
     this.setState({
       errors: []
     })
-    
+
     window.fetch('/api/auth', {
       method: 'POST',
       headers: {
@@ -133,14 +131,13 @@ class App extends Component {
       console.log('err', err)
     })
   }
-  
+
   render () {
     console.log('state', this.state)
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Welcome to Tempo</h1>
         </header>
         <div>
           <label>email</label>
