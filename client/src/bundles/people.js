@@ -1,3 +1,6 @@
+import { createSelector } from 'redux-bundler'
+import isEmpty from 'lodash/isEmpty'
+
 const name = 'people'
 
 const initialState = {
@@ -15,7 +18,8 @@ const reducer = (state = initialState, action) => {
 }
 
 const selectors = {
-  selectPeople: (state) => state.people.people
+  selectPeople: (state) => state.people.people,
+  selectIsFetchingPeople: (state) => state.people.isFetchingPeople
 }
 
 const actionCreators = {
@@ -34,9 +38,23 @@ const actionCreators = {
   }
 }
 
+const reactors = {
+  reactFetchPeople: createSelector(
+    'selectIsFetchingPeople',
+    'selectPeople',
+    'selectUser',
+    (isFetchingPeople, people, user) => {
+      if (!isFetchingPeople && isEmpty(people) && !isEmpty(user)) {
+        return { actionCreator: 'doFetchPeople' }
+      }
+    }
+  )
+}
+
 export default {
   name,
   reducer,
   ...selectors,
-  ...actionCreators
+  ...actionCreators,
+  ...reactors
 }

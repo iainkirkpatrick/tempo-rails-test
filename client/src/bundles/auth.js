@@ -48,7 +48,9 @@ const reducer = (state = initialState, action) => {
 const selectors = {
   selectUser: (state) => state.auth.user,
   selectAuthForm: (state) => state.auth.authForm,
-  selectAuthErrors: (state) => state.auth.errors
+  selectAuthErrors: (state) => state.auth.errors,
+  selectIsSigningIn: (state) => state.auth.isSigningIn,
+  selectIsSigningUp: (state) => state.auth.isSigningUp
 }
 
 const actionCreators = {
