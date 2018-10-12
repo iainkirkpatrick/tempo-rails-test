@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { connect } from 'redux-bundler-react'
+import isEmpty from 'lodash/isEmpty'
 
 class App extends Component {
   constructor () {
@@ -12,40 +14,43 @@ class App extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (this.state.account !== false && prevState.account === false) {
-      window.fetch('/api/people', { headers: this.state.auth })
-      .then((res) => {
-        if (res.ok) {
-          this.setState((prevState, props) => {
-            return {
-              ...prevState,
-              auth: {
-                'access-token': res.headers.get('access-token'),
-                client: res.headers.get('client'),
-                expiry: res.headers.get('expiry'),
-                'token-type': res.headers.get('token-type'),
-                uid: res.headers.get('uid')
-              }
-            }
-          })
-        }
-        return res.json()
-      })
-      .then((res) => {
-        if (res.errors) {
-          this.setState({
-            errors: res.errors
-          })
-        } else {
-          this.setState({
-            people: res
-          })
-        }
-      })
-      .catch((err) => {
-        console.log('err', err)
-      })
+    if (!isEmpty(this.props.user) && isEmpty(prevProps.user)) {
+      this.props.doFetchPeople()
     }
+    // if (this.state.account !== false && prevState.account === false) {
+    //   window.fetch('/api/people', { headers: this.state.auth })
+    //   .then((res) => {
+    //     if (res.ok) {
+    //       this.setState((prevState, props) => {
+    //         return {
+    //           ...prevState,
+    //           auth: {
+    //             'access-token': res.headers.get('access-token'),
+    //             client: res.headers.get('client'),
+    //             expiry: res.headers.get('expiry'),
+    //             'token-type': res.headers.get('token-type'),
+    //             uid: res.headers.get('uid')
+    //           }
+    //         }
+    //       })
+    //     }
+    //     return res.json()
+    //   })
+    //   .then((res) => {
+    //     if (res.errors) {
+    //       this.setState({
+    //         errors: res.errors
+    //       })
+    //     } else {
+    //       this.setState({
+    //         people: res
+    //       })
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log('err', err)
+    //   })
+    // }
   }
 
   handleSignIn () {
@@ -133,7 +138,7 @@ class App extends Component {
   }
 
   render () {
-    console.log('state', this.state)
+    const { people, authForm, authErrors, doSignIn, doSignUp, doUpdateAuthFormEmail, doUpdateAuthFormPassword } = this.props
     return (
       <div className="App">
         <header className="App-header">
@@ -141,27 +146,27 @@ class App extends Component {
         </header>
         <div>
           <label>email</label>
-          <input id='email'></input>
+          <input id='email' value={authForm.email} onChange={(e) => doUpdateAuthFormEmail(e.target.value)}></input>
         </div>
         <div>
           <label>password</label>
-          <input id='password' type={'password'}></input>
+          <input id='password' type={'password'} value={authForm.password} onChange={(e) => doUpdateAuthFormPassword(e.target.value)}></input>
         </div>
-        <button onClick={() => this.handleSignIn()}>sign in</button>
-        <button onClick={() => this.handleSignUp()}>sign up</button>
+        <button onClick={() => doSignIn(authForm)}>sign in</button>
+        <button onClick={() => doSignUp(authForm)}>sign up</button>
         {
-          this.state.errors
-          ? this.state.errors.map((err) => {
+          !isEmpty(authErrors)
+          ? authErrors.map((err) => {
             return <p style={{ color: 'red' }}>{err}</p>
           })
           : null
         }
         {
-          this.state.account
+          !isEmpty(people)
           ? <div>
               <h2>People</h2>
               {
-                this.state.people.map((person, i) => {
+                people.map((person, i) => {
                   return <h4 key={i}>{person.name}</h4>
                 })
               }
@@ -173,4 +178,15 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+  'selectUser',
+  'selectPeople',
+  'selectAuthForm',
+  'selectAuthErrors',
+  'doSignIn',
+  'doSignUp',
+  'doFetchPeople',
+  'doUpdateAuthFormEmail',
+  'doUpdateAuthFormPassword',
+  App
+)

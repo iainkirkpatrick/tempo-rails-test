@@ -1,7 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-// import registerServiceWorker from './registerServiceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'redux-bundler-react'
 
-ReactDOM.render(<App />, document.getElementById('root'));
-// registerServiceWorker();
+import initStore from './bundles'
+
+import App from './App'
+// import registerServiceWorker from './registerServiceWorker'
+
+ReactDOM.render(
+  <Provider store={initStore()}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
+// registerServiceWorker()
