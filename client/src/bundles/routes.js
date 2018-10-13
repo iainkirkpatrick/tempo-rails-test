@@ -1,7 +1,7 @@
 import { createRouteBundle } from 'redux-bundler'
 
-import App from '../App'
+import Home from '../hocs/Home'
 
 export default createRouteBundle({
-  '/': App
+  '/': Home
 })

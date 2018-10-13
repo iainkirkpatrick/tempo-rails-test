@@ -4,12 +4,12 @@ import { Provider } from 'redux-bundler-react'
 
 import initStore from './bundles'
 
-import App from './App'
+import Layout from './hocs/Layout'
 // import registerServiceWorker from './registerServiceWorker'
 
 ReactDOM.render(
   <Provider store={initStore()}>
-    <App />
+    <Layout />
   </Provider>,
   document.getElementById('root')
 )
