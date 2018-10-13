@@ -14,6 +14,7 @@ namespace :dev do
 
   desc 'start dev server'
   task :start do
-    exec 'foreman start -f Procfile.dev'
+    # exec 'foreman start -f Procfile.dev'
+    exec 'PORT=3001 rails s'
   end
 end
